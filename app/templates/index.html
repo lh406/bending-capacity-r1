@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bending Capacity</title>
+    <link rel="stylesheet" href="static/css/styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="/static/js/script.js"></script>  <!-- Link to external JS -->
+</head>
+<body>
+    <div class="container">
+        <h1>13.6.a Bending - Laterally Unsupported Members</h1>
+
+        <div class="content">
+            <div class="input-section">
+                <h2>Input</h2>
+                <form id="bendingForm">
+                    <div class="form-group">
+                        <label for="lunbraced">Lunbraced:</label>
+                        <input type="number" id="lunbraced" name="lunbraced" value="1000" required>
+                        <span class="units">mm</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="omega2">ω2:</label>
+                        <input type="number" id="omega2" name="omega2" value="1.0" required>
+                        <span class="units"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="phi">ϕ:</label>
+                        <input type="number" id="phi" name="phi" value="0.9" required>
+                        <span class="units"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="fy">Fy:</label>
+                        <input type="number" id="fy" name="fy" value="345" required>
+                        <span class="units">MPa</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="es">Es:</label>
+                        <input type="number" id="es" name="es" value="200" required>
+                        <span class="units">GPa</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="g">G:</label>
+                        <input type="number" id="g" name="g" value="77" required>
+                        <span class="units">GPa</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="shape">Select a Shape:</label>
+                        <select id="shapeSelect">
+                            <option value="">-- Select a Shape --</option>
+                            {% for shape in shapes %}
+                                <option value="{{ shape.Shape }}">{{ shape.Shape }}</option>
+                            {% endfor %}
+                        </select> 
+                        <span class="units"></span>               
+                    </div>
+                    <div class="form-group">
+                        <label for="cw">Cw:</label>
+                        <input type="number" id="cw" name="cw" required>
+                        <span class="units">10^9 mm<sup>6</sup></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="j">J:</label>
+                        <input type="number" id="j" name="j" required>
+                        <span class="units">10^3 mm<sup>4</sup></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="iy">Iy:</label>
+                        <input type="number" id="iy" name="iy" required>
+                        <span class="units">10^6 mm<sup>4</sup></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="zx">Zx:</label>
+                        <input type="number" id="zx" name="zx" required>
+                        <span class="units">10^3 mm<sup>3</sup></span>
+                    </div>
+                </form>
+            </div>
+
+            <div class="result-section">
+                <div id="results">
+                    <h2>Results</h2>
+                    <p id="mp">\(M_p = Z_x \cdot F_y = \)<span id="mpResult">\( 0.0 \)</span> \( kN \cdot m\)</p>
+                    <p id="mu">\(M_u = \frac{ω_2 \cdot π}{L_{unbraced}} \cdot 
+                        \sqrt{E I_y G J + 
+                            \left( \frac{π \cdot E}{L_{unbraced}} \right)^2 I_y C_w} = \)<span id="muResult">\( 0.0 \)</span> \(kN \cdot m \)</p>
+                    <p id="mr1">\(M_r = \left\{ 
+                            \begin{array}{ll}
+                                1.15 \phi M_p \left[ 1 - \frac{0.28 M_p}{M_u} \right] ≤ \phi M_p & : \ M_u \gt 0.67M_p \\
+                                \phi M_u& : \ M_u \le 0.67M_p
+                            \end{array}
+                        \right. \)</p>
+                    <p id="mr2">\(M_r = \)<span id="mrResult">\( 0.0 \)</span> \(kN \cdot m\)</p> 
+                    <canvas id="dynamicChart" width="600" height="300"></canvas>
+                    <!-- Calculated results will be displayed here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
